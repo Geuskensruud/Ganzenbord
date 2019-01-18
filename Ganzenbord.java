@@ -5,80 +5,66 @@ public class Ganzenbord {
 
 	static Scanner scan = new Scanner(System.in);
 	static ArrayList <Player> lijstSpelers = new ArrayList <Player> ();
+	static int aanDeBeurt;
+	static boolean spel = true;
+	static boolean winnaar = false;
+	static int aantalSpelers;	
 	
 	public static void main(String[] args) 
 	{
 		spelersAanmaken();
-		int sum = 0;
 		Random random = new Random();
-		System.out.println("spel begonnen, type (g) om de dobbelsteen te gooien");
-        for(int i = 0; i < 1000; i++) { 
-        	String g = scan.nextLine();
-        	int randomNum = random.nextInt(6) + 1;
-            if(sum==23) 
-            {
-            	System.out.println("Game over");
-            	break;
-            }
-            if(sum==25) 
-            {
-            	sum=0;
-            	System.out.println("Terug naar Start");            	
-            }
-            if(sum==45) 
-            {
-            	sum=0;
-            	System.out.println("Terug naar Start");            	
-            }
-            if(sum==10) 
-            {
-            	sum+= randomNum;
-            	System.out.println("dubbele stapjes!");
-           	
-            }
-            if(sum==20) 
-            {
-            	sum+= randomNum;
-            	System.out.println("dubbele stapjes!");
-            }
-            if(sum==30) 
-            {
-            	sum+= randomNum;
-            	System.out.println("dubbele stapjes!");
-            }
-            if(sum==40) 
-            {
-            	sum+= randomNum;
-            	System.out.println("dubbele stapjes!");
-            }
-            if(sum==50) 
-            {
-            	sum+= randomNum;
-            	System.out.println("dubbele stapjes!");
-            }
-            if(sum==60) 
-            {
-            	sum+= randomNum;
-            	System.out.println("dubbele stapjes!");
-            }
-            
-            if(sum>=63)
-            {
-            	System.out.println("Einde game");            	
-            	break;
-
-            }
-                        sum += randomNum;
-                        System.out.println("Je hebt " + randomNum + " gegooid");
-                        System.out.println("je staat op nummer " + sum);
+		while(spel) 
+		{
+			if (aanDeBeurt >= aantalSpelers) {
+				aanDeBeurt = 0;
+			}
+			System.out.println("type (enter) om de dobbelsteen te gooien");
+			scan.nextLine();
+			aanDeBeurt++;
+			System.out.println(lijstSpelers.get(aanDeBeurt).getName());
+			int gooi = random.nextInt(6) + 1;
+			System.out.println(lijstSpelers.get(aanDeBeurt).getName() + "Je hebt " + gooi + " gegooid");
+			lijstSpelers.get(aanDeBeurt).verhoogStaPlaats(gooi);
+	        System.out.println("je staat op nummer " + lijstSpelers.get(aanDeBeurt).getStaPlaats());
+	        
+	        if(lijstSpelers.get(aanDeBeurt).getStaPlaats() == 10 || lijstSpelers.get(aanDeBeurt).getStaPlaats() == 20 ||lijstSpelers.get(aanDeBeurt).getStaPlaats() == 30 || lijstSpelers.get(aanDeBeurt).getStaPlaats() == 40 || lijstSpelers.get(aanDeBeurt).getStaPlaats() == 50 ||lijstSpelers.get(aanDeBeurt).getStaPlaats() == 60) 
+	        {
+	        	lijstSpelers.get(aanDeBeurt).verhoogStaPlaats(gooi);
+	        	System.out.println("jeeh Bonusstapjes");
+	        	System.out.println("je staat op nummer " + lijstSpelers.get(aanDeBeurt).getStaPlaats());
+	        }
+	        if(lijstSpelers.get(aanDeBeurt).getStaPlaats() == 25 || lijstSpelers.get(aanDeBeurt).getStaPlaats() == 45) 
+	        {
+	        	lijstSpelers.get(aanDeBeurt).setStaPlaats(0);
+	        	System.out.println("Terug naar start :(");
+	        	System.out.println("je staat op nummer " + lijstSpelers.get(aanDeBeurt).getStaPlaats());
+	        }
+	        if (lijstSpelers.get(aanDeBeurt).getStaPlaats() == 23)
+			{
+	        	spel= false;
+	        	System.out.println("Game Over X(");
+	        }
+	        if (lijstSpelers.get(aanDeBeurt).getStaPlaats() == 63) 
+	        {
+	        	spel= false;
+	        	winnaar = true;
+	        }
+	        if (lijstSpelers.get(aanDeBeurt).getStaPlaats() > 63) 
+	        {
+	        	int Huidigeplaats = lijstSpelers.get(aanDeBeurt).getStaPlaats();
+	        	int AantalStappenTerug = (Huidigeplaats - 63)*2;
+	        	lijstSpelers.get(aanDeBeurt).verlaagStaPlaats(AantalStappenTerug);
+	        }
+		}
 
  
-        }
+
 	}
 	static void spelersAanmaken()
 	{
 		System.out.println("Met Hoeveel Spelers wil je spelen?");
-		int aantalSpelers = scan.nextInt();
+		aantalSpelers = scan.nextInt();
 		System.out.println("Vul de namen in van de spelers");
 		
 		for (int x = 0; x<=aantalSpelers; x++) 
@@ -111,6 +97,12 @@ class Player
 	}
 	public void setStaPlaats(int staPlaats) {
 		this.staPlaats = staPlaats;
+	}
+	public void verhoogStaPlaats(int gooi) {
+		this.staPlaats += gooi;
+	}
+	public void verlaagStaPlaats(int gooi) {
+		this.staPlaats -= gooi;
 	}
 	
 }
